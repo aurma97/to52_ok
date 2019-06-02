@@ -91,8 +91,8 @@ export default {
             this.$store.dispatch('authentication/login', { username, password })
             .then((response) => {
                 if (response.status == 200){
-                    console.log(this.$store)
-                    this.$router.push({path: '/#/'})
+                    //console.log(this.$store)
+                    this.$router.push('/')
                 }
             })
             .catch(error => {

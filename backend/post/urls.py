@@ -7,8 +7,8 @@ from . import views
 
 urlpatterns = [
     path('', csrf_exempt(PostAPIView.as_view())),
-    path('all', views.get_all_post),
+    path('all', PostDetailAPIView.as_view()),
     path('type', PostTypeAPIView.as_view(), name="post-create"),
     path('date/<pk>', PostRudView.as_view(), name="post-rud"),
-    path('<pk>', views.get_post),
+    path('<pk>', PostRudView.as_view()),
 ]

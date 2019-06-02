@@ -1,11 +1,17 @@
 from django.http import HttpResponse
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from django.contrib.auth import login, logout, authenticate
+from .serializer import UserSerializer
 import json
 
+@api_view(['GET'])
 def current_user(request):
-    current_user = request.user
-    return HttpResponse(current_user.username)
+    # current_user = request.user
+    # user = [current_user.username, current_user.id]
+    # return HttpResponse(user)
+    serializer = UserSerializer(request.user)
+    return Response(serializer.data)
 
 def login_user (request):
     if request.method == 'POST':

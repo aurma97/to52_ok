@@ -18,7 +18,6 @@
         <div class="container has-text-centered">
             <hr>
             <p class="title">
-                
                 {{post.title}}
                 <hr>
             </p>
@@ -35,7 +34,7 @@
                 <div>
                 <p class="heading">Posté le</p>
                 <hr>
-                <p class="title">{{post.created_at}}</p>
+                <p class="title">{{new Date(post.created_at).toLocaleDateString()}}</p>
                 </div>
             </div>
             <div class="level-item has-text-centered">
@@ -54,7 +53,6 @@
             </div>
         </nav>
     </div>
-    
 
     <div class="hero-foot">
         <nav class="tabs is-boxed is-fullwidth">
@@ -99,7 +97,7 @@
                             <div class="notification is-white">
                                 <section>
                                     <b-field label="Votre email">
-                                        <b-input placeholder="Email" type="email" disabled></b-input>
+                                        <b-input placeholder="Email" type="email" disabled v-model="post.email"></b-input>
                                     </b-field>
 
                                     <b-field label="Votre téléphone">
@@ -163,27 +161,31 @@ export default {
                     image_three: '',
                 },
                 category: '',
-                author: 'admin',
+                author: '',
+                email: ''
             },
             index: null
         }
     },
     created(){
-        axios.get('/api/post/'+this.id).then(response =>{
+        axios.get('/api/manage/post/'+this.id).then(response =>{
             //console.log(response.data[0]);
-            this.post.title = response.data[0].title
-            this.post.an_type = response.data[0].an_type
-            this.post.category = response.data[0].category
-            this.post.address.num_street = response.data[0].num_street
-            this.post.address.street = response.data[0].street
-            this.post.address.city = response.data[0].city
-            this.post.address.postalcode = response.data[0].postalcode
-            this.post.price = response.data[0].price
-            this.post.content = response.data[0].content
-            this.post.country = response.data[0].country
+            console.log(response.data)
+            this.post.title = response.data.title
+            this.post.an_type = response.data.an_type.title
+            this.post.category = response.data.category.title
+            this.post.address.num_street = response.data.num_street
+            this.post.address.street = response.data.street
+            this.post.address.city = response.data.city
+            this.post.address.postalcode = response.data.postalcode
+            this.post.price = response.data.price
+            this.post.content = response.data.content
+            this.post.country = response.data.country
+            this.post.author = response.data.author.username
+            this.post.email = response.data.author.email
         });
 
-        axios.get('/api/post/date/'+this.id).then(response =>{
+        axios.get('/api/manage/post/date/'+this.id).then(response =>{
             this.post.images.image_one = response.data.image_one
             this.post.images.image_two = response.data.image_two
             this.post.images.image_three = response.data.image_three

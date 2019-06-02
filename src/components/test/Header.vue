@@ -40,7 +40,7 @@
                         </router-link>
                         <div class="navbar-item has-dropdown is-hoverable" v-if="connected">
                             <a class="navbar-link">
-                                Bonjour {{username}}
+                                Bonjour {{user.username}}
                             </a>
                             <div class="navbar-dropdown">
                                 <router-link class="navbar-item" to="/mon-compte" exact>
@@ -75,25 +75,21 @@
 <script>
 import axios from 'axios'
 import {bus} from '../../main'
+import { createHash } from 'crypto';
 
 export default {
     data(){
         return{
-            active: false,
-            username: ''
+            active: false
         }
     },
     computed : {
         connected (){ 
           return this.$store.getters['authentication/isLoggedIn']
+        },
+        user(){
+          return this.$store.getters['authentication/user']
         }
-    },
-    created(){
-    },
-    mounted(){
-        axios.get('/api/manage/account/user/').then(response =>{
-                this.username = response.data;
-        });
     },
     methods: {
         logout: function () {
@@ -101,7 +97,7 @@ export default {
             this.$router.replace('/connexion')
         },
         show(){
-            console.log(this.$store);
+            console.log(this.user);
         }
     }
 }

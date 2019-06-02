@@ -4,25 +4,14 @@ from .models import Post, PostType
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        fields = [
-            'id',
-            'title',
-            'an_type',
-            'price', 
-            'content',
-            'num_street',
-            'street',
-            'city',
-            'postalcode', 
-            'country',
-            'image_one',
-            'image_two',
-            'image_three',
-            'category',
-            'author',
-            'created_at',
-            'updated_at',
-        ]
+        fields =('__all__')
+        read_only_fields = ['id']
+
+class PostDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields =('__all__')
+        depth = 1
         read_only_fields = ['id']
 
     # def validate_title(self, value):

@@ -1,5 +1,7 @@
 <template>
     <div>
+        <hr>
+        
         <search></search>
         <div class="container">
             <div class="columns">
@@ -116,7 +118,7 @@ export default {
         return{
             posts: {},
             specials: {},
-            url: '/media/'
+            url: ''
         }
     },
     methods:{

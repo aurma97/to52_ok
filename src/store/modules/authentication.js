@@ -3,12 +3,13 @@ import axios from 'axios'
 const state = {
     status: '',
     token: localStorage.getItem('token') || '',
-    user : ''
+    user : localStorage.getItem('user')
 }
 
 const getters = {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
+    user: state => state.user
 }
 
 const actions = {
@@ -25,6 +26,11 @@ const actions = {
             .then((response) =>{
               //console.log(response)
               commit('auth_success', token)
+              axios.get('/api/manage/account/user/').then(response =>{
+                    console.log(response)
+                    localStorage.setItem('user', response.data)
+                    commit('set_user', response.data)
+              });
             })
             
             resolve(resp)
@@ -32,6 +38,7 @@ const actions = {
           .catch(err => {
             commit('auth_error')
             localStorage.removeItem('token')
+            localStorage.removeItem('user')
             reject(err)
           })
         })
@@ -40,6 +47,7 @@ const actions = {
         return new Promise((resolve) => {
           commit('logout')
           localStorage.removeItem('token')
+          localStorage.removeItem('user')
           delete axios.defaults.headers.common['Authorization']
           axios.post('/api/manage/account/logout/')
           resolve()
@@ -52,16 +60,19 @@ const mutations = {
         state.status = 'loading'
     },
     auth_success(state, token){
-    state.status = 'success'
-    state.token = token
+        state.status = 'success'
+        state.token = token
     },
     auth_error(state){
-    state.status = 'error'
+        state.status = 'error'
     },
     logout(state){
-    state.status = ''
-    state.token = ''
-  },
+        state.status = ''
+        state.token = ''
+    },
+    set_user(state, user){
+        state.user = user
+    }
 }
 
 export default {

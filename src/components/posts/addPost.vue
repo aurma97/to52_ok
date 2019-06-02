@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <hr>
+        <br>
         <nav class="breadcrumb has-succeeds-separator" aria-label="breadcrumbs">
             <ul>
                 <li><a href="#">Accueil</a></li>
@@ -231,8 +232,13 @@ export default {
                 errors: [],
                 success: false,
             }
-        },
-        methods: {
+    },
+    computed: {
+        user(){
+          return this.$store.getters['authentication/user']
+        }
+    },
+    methods: {
             savePost(){
                 const formData = new FormData();
 
@@ -255,7 +261,7 @@ export default {
                 }
                 formData.append('country', this.post.country);
                 formData.append('category', this.post.category);
-                formData.append('author', this.post.author);
+                formData.append('author', this.user.id);
                 
                 axios.post(`/api/manage/post/`, formData)
                 .then(response => {
@@ -282,11 +288,11 @@ export default {
             }
         },
         created(){
-            axios.get('/api/category/').then(response =>{
+            axios.get('/api/manage/category/').then(response =>{
                 this.categories = response.data;
             });
 
-            axios.get('/api/post/type').then(response =>{
+            axios.get('/api/manage/post/type').then(response =>{
                 this.postType = response.data;
             });
         }
