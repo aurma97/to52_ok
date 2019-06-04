@@ -5,6 +5,8 @@ from .permissions import IsOwnerOrReadOnly
 from .serializer import PostSerializer, PostDetailSerializer, PostTypeSerializer
 from django.http import HttpResponse
 from django.db import connection
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 import json
 
 #See all objects and create someone
@@ -33,7 +35,7 @@ class PostAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 
 class PostDetailAPIView(mixins.CreateModelMixin, generics.ListAPIView):
     lookup_field = 'pk'
-    serializer_class= PostSerializer
+    serializer_class= PostDetailSerializer
     #authentication_class= (JSONWebTokenAuthentication,)
     #permission_classes= (IsAuthenticated,)
 
@@ -82,3 +84,23 @@ class PostRudView(generics.RetrieveUpdateDestroyAPIView):
     # def get_object(self):
     #     pk = self.kwargs.get("pk")
     #     return Post.objects.get(pk=pk)
+
+def get_posts_user(request, id):
+    author = Post.objects.all().filter(author=id)
+
+    return HttpResponse(author)
+
+class PostByAuthorAPIView(generics.ListAPIView):
+    lookup_field = 'author'
+    serializer_class = PostDetailSerializer
+    # queryset = Post.objects.all()
+    # filter_backends = (DjangoFilterBackend,)
+    # filter_fields = ('author')
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        author = self.request.query_params.get('author_id', '')
+        if author:
+            return queryset.filter(author = author)
+        return queryset
+    

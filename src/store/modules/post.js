@@ -1,80 +1,93 @@
-import equipmentsService from '../../services/equipmentsService'
+import postService from '../../services/postService'
 
 const state = {
-  equipments: [],
-  equipment: [],
-  types:[],
+  posts: [],
+  post: [],
+  myPosts: [],
   errors: ''
 }
 
 const getters = {
-  equipments: state => {
-    return state.equipments
+  posts: state => {
+    return state.posts
   }
 }
 
 const actions = {
-  getEquipments ({ commit }) {
-    equipmentsService.fetchEquipments()
-    .then(Equipments => {
-      commit('setEquipments', Equipments)
+  getPosts ({ commit }) {
+    postService.fetchPosts()
+    .then(Posts => {
+      commit('setPosts', Posts)
     })
   },
+
+  getTypes ({ commit }) {
+    postService.fetchTypes()
+    .then(Types => {
+      commit('setTypes', Types)
+    })
+  },
+
   getErrors () {
     return state.errors
   },
-  getTypes ({ commit }) {
-    typeEquipmentsService.fetchTypeEquipments()
-    .then(types => {
-      commit('setTypes', types)
-    })
-  },
-  getEquipment ({ commit }, id) {
-    equipmentsService.showEquipment(id)
+
+  getPost ({ commit }, id) {
+    postService.showPost(id)
     .then(id => {
-      commit('getEquipment', id)
+      commit('getPost', id)
     })
   },
-  addEquipment({ commit }, Equipment) {
-    equipmentsService.postEquipment(Equipment)
+
+  myPosts ({ commit }, id) {
+    postService.myPosts(id)
+    .then(myPosts => {
+      commit('myPosts', myPosts)
+    })
+  },
+
+  addPost({ commit }, Equipment) {
+    postService.postPost(Equipment)
     .catch(err => state.errors = err.response.status)
     .then(() => {
-      commit('addEquipment', Equipment)
+      commit('addPost', Equipment)
     })
   },
-  updateEquipment({ commit }, payload) {
-    equipmentsService.updateEquipment(payload)
+
+  updatePost({ commit }, payload) {
+    postService.updatePost(payload)
     .catch(err => state.errors = err.response.data)
     .then(() => {
-      commit('addEquipment', payload)
+      commit('addPost', payload)
     })
   },
-  deleteEquipment( { commit }, id) {
-    equipmentsService.deleteEquipment(id)
+
+  deletePost( { commit }, id) {
+    postService.deletePost(id)
     .catch(err => state.errors = err.response.data)
-    commit('deleteEquipment', id)
+    commit('deletePost', id)
   }
 }
 
 const mutations = {
-  setEquipments (state, equipments) {
-    state.equipments = equipments
+  setPosts (state, posts) {
+    state.posts = posts
   },
-  setTypes (state, types) {
-    state.types = types
+  getPost(state, post) {
+    state.post = post
   },
-  getEquipment(state, id) {
-    state.equipment = id
+  myPosts(state, myPosts) {
+    state.myPosts = myPosts
   },
-  addEquipment(state, equipment) {
-    state.equipments.push(equipment)
+  addPost(state, post) {
+    state.posts.push(post)
   },
-  updateEquipment(state, id, payload) {
-    state.equipments = state.equipments.filter(obj => obj.pk !== id)
-    state.equipments.push(payload)
+  updatePost(state, id, payload) {
+    state.posts = state.posts.filter(obj => obj.pk !== id)
+    state.posts.push(payload)
   },
-  deleteEquipment(state, id) {
-    state.equipments = state.equipments.filter(obj => obj.pk !== id)
+  deletePost(state, id) {
+    state.posts = state.posts.filter(obj => obj.pk !== id)
   }
 }
 

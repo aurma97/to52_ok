@@ -73,10 +73,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-import {bus} from '../../main'
-import { createHash } from 'crypto';
-
 export default {
     data(){
         return{

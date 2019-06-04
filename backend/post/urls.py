@@ -11,4 +11,5 @@ urlpatterns = [
     path('type', PostTypeAPIView.as_view(), name="post-create"),
     path('date/<pk>', PostRudView.as_view(), name="post-rud"),
     path('<pk>', PostRudView.as_view()),
+    path('author/', PostByAuthorAPIView.as_view()),
 ]

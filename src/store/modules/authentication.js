@@ -3,7 +3,7 @@ import axios from 'axios'
 const state = {
     status: '',
     token: localStorage.getItem('token') || '',
-    user : localStorage.getItem('user')
+    user : localStorage.getItem('user') || ''
 }
 
 const getters = {
@@ -27,7 +27,7 @@ const actions = {
               //console.log(response)
               commit('auth_success', token)
               axios.get('/api/manage/account/user/').then(response =>{
-                    console.log(response)
+                    //console.log(response)
                     localStorage.setItem('user', response.data)
                     commit('set_user', response.data)
               });
@@ -55,6 +55,13 @@ const actions = {
     },
     registerSuccess({commit}, payload){
         commit('register_success')
+    },
+    getUser({commit}){
+          axios.get('/api/manage/account/user/').then(response =>{
+                //console.log(response)
+                localStorage.setItem('user', response.data)
+                commit('set_user', response.data)
+          });
     }
 }
 

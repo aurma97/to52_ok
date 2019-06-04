@@ -7,30 +7,32 @@ const config = {
 }
 
 export default {
-  fetchEquipments() {
-    return api.get(`equipments/`)
+  fetchPosts() {
+    return api.get(`post/all`)
               .then(response => response.data)
   },
-  showEquipment(id) {
-    return api.get(`equipments/show/${id}`)
+  showPost(id) {
+    return api.get(`post/:${id}`)
               .then(response => response.data)
   },
-  postEquipment(payload) {
-    return api.post(`equipments/create`, payload)
+  myPosts(id){
+    return api.get('/post/author/?author_id='+id)
               .then(response => response.data)
-
   },
-  updateEquipment(payload) {
-    return api.put(`equipments/update-or-delete/${payload.id}`, payload)
+  showTypes(){
+    return api.get('post/type')
               .then(response => response.data)
-              .catch(function (error) {
-               
-              })
   },
-  deleteEquipment(id) {
-    return api.delete(`equipments/update-or-delete/${id}`)
-              .then(response => { 
-                
-              })  
+  postPost(payload) {
+    return api.post(`post/`, payload)
+              .then(response => response.data)
+  },
+  updatePost(payload) {
+    return api.put(`post/${payload.id}`, payload)
+              .then(response => response.data)
+  },
+  deletePost(id) {
+    return api.delete(`post/${id}`)
+              .then(response => response.data)
   }
 }

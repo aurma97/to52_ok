@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import listPosts from '@/components/posts/listPosts.vue';
 import showPost from '@/components/posts/showPost.vue';
+import myPosts from '@/components/posts/myPosts.vue';
 import addPost from '@/components/posts/addPost.vue';
 import login from '@/components/accounts/Login.vue';
 import register from '@/components/accounts/Register.vue';
@@ -36,6 +37,10 @@ let router = new Router({
         path: '/annonce/:id', 
         component:showPost
     },
+    { 
+      path: '/mes-annonces', 
+      component:myPosts
+  },
   ]
 })
 
