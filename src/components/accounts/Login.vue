@@ -2,8 +2,9 @@
     <section class="hero is-large is-link is-bold">
         <div class="hero-body">
             <div class="container">
+                <span class="notification is-success" v-if="newuser">Bonjour {{newuser}} ! Votre inscription s'est effectuée avec succès, veuillez vous connecter dès à présent !</span>
                 <p class="title">
-                    Connexion
+                     Connexion
                 </p>
                 <p class="subtitle">
                     Veuillez remplir le formulaire ci-dessous pour vous connecter
@@ -82,6 +83,9 @@ export default {
         },
         user(){
             return this.$store.state.authentication.user
+        },
+        newuser(){
+          return this.$store.getters['authentication/username']
         }
     },
     methods:{

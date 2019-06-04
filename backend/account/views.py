@@ -1,7 +1,10 @@
 from django.http import HttpResponse
+from rest_framework import generics, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from .permissions import AllowAny 
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 from .serializer import UserSerializer
 import json
 
@@ -30,4 +33,16 @@ def login_user (request):
 def logout_user(request):
     if request.method == 'POST':
         logout(request)
+    return HttpResponse('Logout successful')
+
+class AccountAPIView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class= UserSerializer
+   
+
+def register_user(request):
+    form = request.POST
+
+    if form.is_valid():
+        form.save()
     return HttpResponse('Logout successful')

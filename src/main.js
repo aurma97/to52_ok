@@ -9,6 +9,9 @@ import 'buefy/dist/buefy.css'
 import DateRangePicker from "@gravitano/vue-date-range-picker";
 import axios from 'axios'
 import { Verify } from 'crypto';
+import VeeValidate from 'vee-validate';
+
+Vue.use(VeeValidate);
 Vue.use(DateRangePicker);
 Vue.use(Buefy)
 

@@ -52,6 +52,9 @@ const actions = {
           axios.post('/api/manage/account/logout/')
           resolve()
         })
+    },
+    registerSuccess({commit}, payload){
+        commit('register_success')
     }
 }
 
@@ -72,6 +75,9 @@ const mutations = {
     },
     set_user(state, user){
         state.user = user
+    },
+    register_success(state, username){
+        state.username = username
     }
 }
 

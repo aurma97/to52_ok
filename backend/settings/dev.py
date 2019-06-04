@@ -39,6 +39,10 @@ INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',  # < Per Whitenoise, to disable built in
     'django.contrib.staticfiles',
     'rest_framework',
+    # 'rest_auth',
+    # 'django.contrib.sites',
+    # 'allauth',
+    # 'rest_auth.registration',
     'rest_framework.authtoken',
     'corsheaders',
     'backend.api',
@@ -47,6 +51,7 @@ INSTALLED_APPS = [
     'backend.post',
 
 ]
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -159,9 +164,6 @@ DEFAULT_PERMISSION_CLASSES = {
 }
 REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%Y-%m-%d", '%d-%m-%Y', '%d/%m/%Y', '%Y/%m/%d'],
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
