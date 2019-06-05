@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'backend.account',
     'backend.category',
     'backend.post',
-
 ]
 SITE_ID = 1
 

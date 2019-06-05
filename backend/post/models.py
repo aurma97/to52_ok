@@ -13,7 +13,7 @@ class Post(models.Model):
     title = models.CharField (max_length=100)
     an_type = models.ForeignKey(PostType, default=None, on_delete=models.PROTECT)
     price = models.CharField (max_length=100)
-    content = models.TextField (max_length=1000)
+    content = models.TextField (max_length=10000)
     num_street = models.CharField (max_length=40)
     street = models.CharField (max_length=40)
     city = models.CharField (max_length=40)

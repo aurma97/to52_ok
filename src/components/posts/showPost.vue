@@ -96,30 +96,49 @@
                         <b-tab-item label="Contacter le vendeur" icon="message-text">
                             <div class="notification is-white">
                                 <section>
-                                    <b-field label="Votre email">
-                                        <b-input placeholder="Email" type="email" disabled v-model="post.email"></b-input>
-                                    </b-field>
-
-                                    <b-field label="Votre téléphone">
-                                        <b-input placeholder="Ex: 0600000000"
-                                            type="number"
-                                            min="10"
-                                            max="20">
+                                    <b-field 
+                                        label="Emetteur">
+                                        <b-input 
+                                            placeholder="Email" 
+                                            type="email" 
+                                            disabled 
+                                            v-model="mail.sender">
                                         </b-input>
                                     </b-field>
-
-                                    <b-field label="Objet">
-                                        <b-input placeholder="Votre annonce blablabla du 22/07/1997 à 18h06 m'intéresse" type="url"></b-input>
+                                    <b-field label="Destinataire">
+                                        <b-input 
+                                            placeholder="Email" 
+                                            v-model="mail.receiver"
+                                            type="email" disabled >
+                                        </b-input>
                                     </b-field>
-
-                                    <b-field label="Contenu">
+                                    <b-field 
+                                        label="Objet"
+                                        :type="{'is-danger': errors.has('object')}"
+                                        :message="[{'Un objet est requis': errors.first('object')}]">
+                                        <b-input 
+                                            placeholder="Votre annonce blablabla du 22/07/1997 à 18h06 m'intéresse" 
+                                            v-model="mail.object"
+                                            name="object"
+                                            v-validate="'required'"
+                                            type="text">
+                                        </b-input>
+                                    </b-field>
+                                    <b-field 
+                                        label="Contenu"
+                                        :type="{'is-danger': errors.has('content')}"
+                                        :message="[{'Un contenu est requis': errors.first('content')}]">
                                         <b-input type="textarea"
                                             minlength="10"
-                                            maxlength="100"
-                                            placeholder="Maxlength automatically counts characters">
+                                            name="content"
+                                            maxlength="1000"
+                                            v-model="mail.content"
+                                            v-validate="'required'"
+                                            placeholder="Votre message ici"
+                                            required>
                                         </b-input>
                                     </b-field>
-                                    <b-button type="is-link" outlined>Envoyer</b-button>
+                                    <b-button type="is-link" @click.prevent="send" outlined>Envoyer</b-button>
                                 </section>
                             </div>
                         </b-tab-item>
@@ -164,13 +183,45 @@ export default {
                 author: '',
                 email: ''
             },
+            mail: {
+                sender: '',
+                receiver: '',
+                object:'',
+                content:'',
+            },
             index: null
         }
     },
+    computed:{
+         user(){
+          return this.$store.getters['authentication/user']
+        },
+    },
+    methods:{
+        send(){
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                    var Email = { send: function (a) { return new Promise(function (n, e) { a.nocache = Math.floor(1e6 * Math.random() + 1), a.Action = "Send"; var t = JSON.stringify(a); Email.ajaxPost("https://smtpjs.com/v3/smtpjs.aspx?", t, function (e) { n(e) }) }) }, ajaxPost: function (e, n, t) { var a = Email.createCORSRequest("POST", e); a.setRequestHeader("Content-type", "application/x-www-form-urlencoded"), a.onload = function () { var e = a.responseText; null != t && t(e) }, a.send(n) }, ajax: function (e, n) { var t = Email.createCORSRequest("GET", e); t.onload = function () { var e = t.responseText; null != n && n(e) }, t.send() }, createCORSRequest: function (e, n) { var t = new XMLHttpRequest; return "withCredentials" in t ? t.open(e, n, !0) : "undefined" != typeof XDomainRequest ? (t = new XDomainRequest).open(e, n) : t = null, t } };
+                    
+                    Email.send({
+                        Host: "smtp.gmail.com",
+                        Username: "lo54.p2019@gmail.com",
+                        Password: 990099009900,
+                        To: this.mail.receiver,
+                        From: this.mail.sender,
+                        Subject: this.mail.object,
+                        Body: this.mail.content
+                    }).then(message => console.log(message))
+                }
+            })
+        }
+    },
     created(){
+        this.$store.dispatch('authentication/getUser');
+
         axios.get('/api/manage/post/'+this.id).then(response =>{
             //console.log(response.data[0]);
-            console.log(response.data)
+            //console.log(response.data)
             this.post.title = response.data.title
             this.post.an_type = response.data.an_type.title
             this.post.category = response.data.category.title
@@ -183,6 +234,10 @@ export default {
             this.post.country = response.data.country
             this.post.author = response.data.author.username
             this.post.email = response.data.author.email
+
+            this.mail.sender = this.user.email
+            this.mail.receiver = this.post.email
+            this.mail.object = 'Votre annonce '+ this.post.title +' sur Annonces UTBM'
         });
 
         axios.get('/api/manage/post/date/'+this.id).then(response =>{
