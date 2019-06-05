@@ -12,7 +12,7 @@ export default {
               .then(response => response.data)
   },
   showPost(id) {
-    return api.get(`post/:${id}`)
+    return api.get(`post/${id}`)
               .then(response => response.data)
   },
   myPosts(id){
@@ -23,12 +23,16 @@ export default {
     return api.get('post/type')
               .then(response => response.data)
   },
+  showCategories(){
+    return api.get('category/')
+              .then(response => response.data)
+  },
   postPost(payload) {
     return api.post(`post/`, payload)
               .then(response => response.data)
   },
   updatePost(payload) {
-    return api.put(`post/${payload.id}`, payload)
+    return api.put(`post/${payload.id}`, payload.formData)
               .then(response => response.data)
   },
   deletePost(id) {

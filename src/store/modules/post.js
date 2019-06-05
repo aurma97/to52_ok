@@ -4,6 +4,8 @@ const state = {
   posts: [],
   post: [],
   myPosts: [],
+  types: [],
+  categories: [],
   errors: ''
 }
 
@@ -22,9 +24,16 @@ const actions = {
   },
 
   getTypes ({ commit }) {
-    postService.fetchTypes()
+    postService.showTypes()
     .then(Types => {
       commit('setTypes', Types)
+    })
+  },
+
+  getCategories ({ commit }) {
+    postService.showCategories()
+    .then(Categories => {
+      commit('setCategories', Categories)
     })
   },
 
@@ -54,9 +63,9 @@ const actions = {
     })
   },
 
-  updatePost({ commit }, payload) {
+  updatePost({ commit },  payload) {
     postService.updatePost(payload)
-    .catch(err => state.errors = err.response.data)
+    .catch(err => state.errors = err.response.status)
     .then(() => {
       commit('addPost', payload)
     })
@@ -64,7 +73,7 @@ const actions = {
 
   deletePost( { commit }, id) {
     postService.deletePost(id)
-    .catch(err => state.errors = err.response.data)
+    .catch(err => state.errors = err.response.status)
     commit('deletePost', id)
   }
 }
@@ -72,6 +81,12 @@ const actions = {
 const mutations = {
   setPosts (state, posts) {
     state.posts = posts
+  },
+  setTypes (state, types) {
+    state.types = types
+  },
+  setCategories (state, categories) {
+    state.categories = categories
   },
   getPost(state, post) {
     state.post = post

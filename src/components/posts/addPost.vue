@@ -227,7 +227,7 @@ export default {
                     image_three: null,
                     country: 'France',
                     category: '',
-                    author: 2,
+                    author: '',
                 },
                 errors: [],
                 success: false,
@@ -263,6 +263,7 @@ export default {
                 formData.append('category', this.post.category);
                 formData.append('author', this.user.id);
                 
+                console.log(formData)
                 axios.post(`/api/manage/post/`, formData)
                 .then(response => {
                     this.success = !this.success
