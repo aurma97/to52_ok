@@ -28,34 +28,7 @@
         <!-- Modification d'une annonce -->
         <div class="notification is-white" v-if="post && showPost" >
             <h1 class="title is-2">Modification de " {{post.title}} " </h1>        
-            <div class="container is-info" v-if="success">
-                <p class="title has-text-centered">
-                    Votre annonce a été publiée !
-                </p>
-                <p>
-                    <div class="notification is-link has-text-centered">
-                        <b-button type="is-info"
-                            inverted>
-                            Accueil
-                        </b-button>
-                        &ensp;
-                        <b-button @click="reset" type="is-info"
-                            inverted
-                            outlined>
-                            Déposer une autre annonce
-                        </b-button>
-                        &ensp;
-                        <b-button type="is-info"
-                            inverted
-                            outlined>
-                            Mes annonces
-                        </b-button>
-                    </div>
-                </p>
-                <hr>
-            </div>
            <hr> 
-            
             <div class="" v-if="!success">
                 <div class="">
                     <section class="notification">
@@ -113,16 +86,35 @@
                     <div class="columns notification">
                         <div class="column">
                             <section>
-                                <b-field label="Titre de l'annonce">
-                                    <b-input type="is-fullwidth" v-model="post.title" placeholder="Exemple: location TV"></b-input>
+                                <b-field 
+                                    label="Titre de l'annonce"
+                                    :type="{'is-danger': errors.has('title')}"
+                                    :message="[{'Un titre est requis': errors.first('title')}]">
+                                    <b-input 
+                                        type="is-fullwidth" 
+                                        v-model="post.title" 
+                                        name="title"
+                                        placeholder="Exemple: location TV"
+                                        v-validate="'required'"></b-input>
                                 </b-field>
                             </section>
                         </div>
                         <div class="column">
                             <section>
-                                <b-field label="Prix *">
+                                <b-field 
+                                    label="Prix *"
+                                    :type="{'is-danger': errors.has('price')}"
+                                    :message="[{
+                                        'Le prix doit être renseigné' : errors.first('price', 'required'),
+                                        'Le prix doit être numérique' : errors.firstByRule('price', 'decimal')
+                                    }]">
                                     <p class="control has-icons-right">
-                                        <input v-model="post.price" class="input" type="text">
+                                        <input 
+                                            v-model="post.price"
+                                            name="price" 
+                                            v-validate="'required|decimal'"
+                                            class="input" 
+                                            type="text">
                                         <span class="icon is-small is-right">
                                             <i class="fas fa-euro-sign"></i>
                                         </span>
@@ -136,8 +128,16 @@
                 </div>
                 <div class="notification">
                     <section>
-                        <b-field type="is-fullwidth" label="Texte de l'annonce *">
-                            <b-input v-model="post.content" type="textarea"></b-input>
+                        <b-field 
+                            type="is-fullwidth" 
+                            label="Texte de l'annonce *"
+                            :type="{'is-danger': errors.has('content')}"
+                            :message="[{'Une description doit être fournie': errors.first('content')}]">
+                            <b-input 
+                                v-model="post.content"
+                                name="content" 
+                                v-validate="'required'"
+                                type="textarea"></b-input>
                         </b-field>
                     </section>
                     <br>
@@ -147,9 +147,20 @@
                             <hr>
                             <div class="columns">
                                 <div class="column is-3">
-                                    <b-field label="N° rue">
+                                    <b-field 
+                                        label="N° rue"
+                                        :type="{'is-danger': errors.has('num_street')}"
+                                        :message="[{
+                                            'Le N° de la rue ne doit pas être vide' : errors.first('num_street', 'required'),
+                                            'Le N° de la rue doit être numérique' : errors.firstByRule('num_street', 'decimal')
+                                        }]">
                                         <p class="control has-icons-left">
-                                            <input v-model="post.num_street" class="input" type="text">
+                                            <input 
+                                                v-model="post.num_street" 
+                                                class="input" 
+                                                name="num_street"
+                                                v-validate="'required|decimal'"
+                                                type="text">
                                             <span class="icon is-small is-left">
                                                 <i class="fas fa-map-pin"></i>
                                             </span>
@@ -157,9 +168,17 @@
                                     </b-field>
                                 </div>
                                 <div class="column">
-                                    <b-field label="Nom de rue">
+                                    <b-field 
+                                        label="Nom de rue"
+                                        :type="{'is-danger': errors.has('street')}"
+                                        :message="[{'Un nom de rue doit être fourni': errors.first('street')}]">
                                         <p class="control has-icons-left">
-                                            <input v-model="post.street" class="input" type="text">
+                                            <input 
+                                                v-model="post.street" 
+                                                class="input" 
+                                                name="street"
+                                                v-validate="'required'"
+                                                type="text">
                                             <span class="icon is-small is-left">
                                                 <i class="fas fa-map-pin"></i>
                                             </span>
@@ -171,9 +190,17 @@
                         <div class="column">
                             <div class="columns">
                                 <div class="column">
-                                    <b-field label="Ville">
+                                    <b-field 
+                                        label="Ville"
+                                        :type="{'is-danger': errors.has('city')}"
+                                        :message="[{'Une ville doit être renseignée': errors.first('city')}]">
                                         <p class="control has-icons-left">
-                                            <input v-model="post.city" class="input" type="text">
+                                            <input 
+                                                v-model="post.city" 
+                                                class="input" 
+                                                name="city"
+                                                v-validate="'required'"
+                                                type="text">
                                             <span class="icon is-small is-left">
                                                 <i class="fas fa-map-pin"></i>
                                             </span>
@@ -181,9 +208,17 @@
                                     </b-field>
                                 </div>
                                 <div class="column">
-                                    <b-field label="Code postal">
+                                    <b-field 
+                                        label="Code postal"
+                                        :type="{'is-danger': errors.has('postalcode')}"
+                                        :message="[{'Un code postal doit être renseigné': errors.first('postalcode')}]">
                                         <p class="control has-icons-left">
-                                            <input v-model="post.postalcode" class="input" type="text">
+                                            <input 
+                                                v-model="post.postalcode" 
+                                                class="input" 
+                                                name="postalcode"
+                                                v-validate="'required'"
+                                                type="text">
                                             <span class="icon is-small is-left">
                                                 <i class="fas fa-map-pin"></i>
                                             </span>
@@ -208,7 +243,7 @@
                                             <b-button @click="showPost = false">Annuler</b-button>
                                         </b-field>
                                         <b-field>
-                                            <b-button type="is-link" @click="updatePost(post)">Modifier</b-button>
+                                            <b-button type="is-link" @click.prevent="updatePost(post)">Modifier</b-button>
                                         </b-field>
                                     </b-field>
                                 </div>
@@ -287,12 +322,6 @@
                         </section>
                     </div>
                 </div>
-            </div>
-            <pre>
-                {{post}}
-            </pre>
-            <div v-for="err in errors">
-                {{err}} 
             </div>
         </div>
          <!-- Chargement lors de la sauvegarde -->
@@ -449,7 +478,6 @@ export default {
                     category: '',
                     author: 2,
                 },
-            errors:null,
             isLoading: false,
             isFullPage: false,
             success: false,
@@ -509,83 +537,79 @@ export default {
             
         },
         updatePost(post){
-            if (this.newCategory){
-                post.category = this.postOne.category.id
-            }else if (this.newType){
-                post.an_type = this.postOne.an_type.id
-            }
-            
-            // if (post.image_one){
-            //     post.image_one = post.image_one.substr(post.image_one.lastIndexOf("/")+1)
-            // }
-            
-            // if(post.image_two){
-            //     post.image_two = post.image_two.substr(post.image_two.lastIndexOf("/")+1)
-            // }
-            
-            // if(post.image_three){
-            //     post.image_three = post.image_three.substr(post.image_three.lastIndexOf("/")+1)
-            // }
+            this.$validator.validateAll().then((result) => {
+                if (result) {
+                     if (this.newCategory){
+                            post.category = this.postOne.category.id
+                        }else if (this.newType){
+                            post.an_type = this.postOne.an_type.id
+                        }
+                        
+                        // if (post.image_one){
+                        //     post.image_one = post.image_one.substr(post.image_one.lastIndexOf("/")+1)
+                        // }
 
-            const formData = new FormData();
+                        const formData = new FormData();
 
-            formData.append('title', post.title);
-            formData.append('an_type', post.an_type);
-            formData.append('price', post.price);
-            formData.append('content', post.content);
-            formData.append('num_street', post.num_street);
-            formData.append('street', post.street);
-            formData.append('city', post.city);
-            formData.append('postalcode', post.postalcode);
-            if (post.image_one){
-                this.toDataUrl(post.image_one, function(myBase64) {
-                    formData.append('image_one', myBase64);
-                });
-            }
-            if (post.image_two){
-                this.toDataUrl(post.image_two, function(myBase64) {
-                    formData.append('image_two', myBase64);
-                });
-            }
-            if (post.image_three){
-                this.toDataUrl(post.image_three, function(myBase64) {
-                    formData.append('image_three', myBase64);
-                });
-            }
-            formData.append('country', post.country);
-            formData.append('category', post.category);
-            formData.append('author', this.user.id);
+                        formData.append('title', post.title);
+                        formData.append('an_type', post.an_type);
+                        formData.append('price', post.price);
+                        formData.append('content', post.content);
+                        formData.append('num_street', post.num_street);
+                        formData.append('street', post.street);
+                        formData.append('city', post.city);
+                        formData.append('postalcode', post.postalcode);
+                        if (post.image_one){
+                            this.toDataUrl(post.image_one, function(myBase64) {
+                                formData.append('image_one', myBase64);
+                            });
+                        }
+                        if (post.image_two){
+                            this.toDataUrl(post.image_two, function(myBase64) {
+                                formData.append('image_two', myBase64);
+                            });
+                        }
+                        if (post.image_three){
+                            this.toDataUrl(post.image_three, function(myBase64) {
+                                formData.append('image_three', myBase64);
+                            });
+                        }
+                        formData.append('country', post.country);
+                        formData.append('category', post.category);
+                        formData.append('author', this.user.id);
 
-            var id = post.id
+                        var id = post.id
 
-            this.$store.dispatch('post/updatePost', {id, formData})
+                        this.$store.dispatch('post/updatePost', {id, formData})
 
-            this.errors = this.$store.dispatch('post/getErrors')
-            if(this.errors != 400 | this.erros != 500){
-                setTimeout(() => {
-                    this.$store.dispatch('post/myPosts', this.user.id);
-                    this.isLoading = false
-                    this.showPost = false
-                    this.post = []
-                    this.$notification.open({
-                        duration: 5000,
-                        message: `Modification effectuée avec succès`,
-                        position: 'is-bottom-right',
-                        type: 'is-success',
-                        hasIcon: true
-                    })
-                }, 500)   
-            }
-            else
-            {
-                this.$notification.open({
-                    duration: 5000,
-                    message: `Modification impossible, l'équipement est utilisé par une réservation`,
-                    position: 'is-bottom-right',
-                    type: 'is-danger',
-                    hasIcon: true
-                })
-            }
+                        this.errors = this.$store.dispatch('post/getErrors')
+                        if(this.errors != 400 | this.erros != 500){
+                            setTimeout(() => {
+                                this.$store.dispatch('post/myPosts', this.user.id);
+                                this.isLoading = false
+                                this.showPost = false
+                                this.post = []
+                                this.$notification.open({
+                                    duration: 5000,
+                                    message: `Modification effectuée avec succès`,
+                                    position: 'is-bottom-right',
+                                    type: 'is-success',
+                                    hasIcon: true
+                                })
+                            }, 500)   
+                        }
+                        else
+                        {
+                            this.$notification.open({
+                                duration: 5000,
+                                message: `Modification impossible, l'équipement est utilisé par une réservation`,
+                                position: 'is-bottom-right',
+                                type: 'is-danger',
+                                hasIcon: true
+                            })
+                        }
+                    }
+            })
         },
         toDataUrl(url, callback) {
             var xhr = new XMLHttpRequest();

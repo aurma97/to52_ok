@@ -52,7 +52,7 @@
                     <b-field type="is-fullwidth" label="Type d'annonce *">
                         <div class="control">
                             <label class="radio" v-for="typ in postType">
-                                <input type="radio" name="foobar" v-model="post.an_type" v-bind:value="typ.id">
+                                <input type="radio" name="foobar" v-model="post.an_type" v-bind:value="typ.id" >
                                 {{typ.title}}
                             </label>
                         </div>
@@ -60,15 +60,34 @@
                 </section>
                 <br>
                 <section>
-                    <b-field label="Titre de l'annonce">
-                        <b-input type="is-fullwidth" v-model="post.title" placeholder="Exemple: location TV"></b-input>
+                    <b-field 
+                        label="Titre de l'annonce"
+                        :type="{'is-danger': errors.has('title')}"
+                        :message="[{'Un titre est requis': errors.first('title')}]">
+                        <b-input 
+                            type="is-fullwidth" 
+                            v-model="post.title" 
+                            name="title"
+                            placeholder="Exemple: location TV"
+                            v-validate="'required'"></b-input>
                     </b-field>
                 </section>
                 <br>
                 <section>
-                     <b-field label="Prix *">
+                    <b-field 
+                        label="Prix *"
+                        :type="{'is-danger': errors.has('price')}"
+                        :message="[{
+                            'Le prix doit être renseigné' : errors.first('price', 'required'),
+                            'Le prix doit être numérique' : errors.firstByRule('price', 'decimal')
+                        }]">
                         <p class="control has-icons-right">
-                            <input v-model="post.price" class="input" type="text">
+                            <input 
+                                v-model="post.price"
+                                name="price" 
+                                v-validate="'required|decimal'"
+                                class="input" 
+                                type="text">
                             <span class="icon is-small is-right">
                                 <i class="fas fa-euro-sign"></i>
                             </span>
@@ -78,8 +97,16 @@
             </div>
             <div class="column">
                  <section>
-                     <b-field type="is-fullwidth" label="Texte de l'annonce *">
-                        <b-input v-model="post.content" type="textarea"></b-input>
+                     <b-field 
+                        type="is-fullwidth" 
+                        label="Texte de l'annonce *"
+                        :type="{'is-danger': errors.has('content')}"
+                        :message="[{'Une description doit être fournie': errors.first('content')}]">
+                        <b-input 
+                            v-model="post.content"
+                            name="content" 
+                            v-validate="'required'"
+                            type="textarea"></b-input>
                     </b-field>
                  </section>
                  <br>
@@ -88,18 +115,37 @@
                         <h3 class="has-text-centered">Votre adresse</h3>
                         <hr>
                         <section>
-                            <b-field label="Numéro de rue">
+                            <b-field 
+                                label="N° rue"
+                                :type="{'is-danger': errors.has('num_street')}"
+                                :message="[{
+                                    'Le N° de la rue ne doit pas être vide' : errors.first('num_street', 'required'),
+                                    'Le N° de la rue doit être numérique' : errors.firstByRule('num_street', 'decimal')
+                                }]">
                                 <p class="control has-icons-left">
-                                    <input v-model="post.num_street" class="input" type="text">
+                                    <input 
+                                        v-model="post.num_street" 
+                                        class="input" 
+                                        name="num_street"
+                                        v-validate="'required|decimal'"
+                                        type="text">
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-map-pin"></i>
                                     </span>
                                 </p>
                             </b-field>
 
-                            <b-field label="Nom de rue">
+                            <b-field 
+                                label="Nom de rue"
+                                :type="{'is-danger': errors.has('street')}"
+                                :message="[{'Un nom de rue doit être fourni': errors.first('street')}]">
                                 <p class="control has-icons-left">
-                                    <input v-model="post.street" class="input" type="text">
+                                    <input 
+                                        v-model="post.street" 
+                                        class="input" 
+                                        name="street"
+                                        v-validate="'required'"
+                                        type="text">
                                     <span class="icon is-small is-left">
                                         <i class="fas fa-map-pin"></i>
                                     </span>
@@ -108,32 +154,48 @@
                         </section>
                     </div>
                     <div class="column">
-                        <b-field label="Ville">
-                                <p class="control has-icons-left">
-                                    <input v-model="post.city" class="input" type="text">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-map-pin"></i>
-                                    </span>
-                                </p>
-                            </b-field>
+                        <b-field 
+                            label="Ville"
+                            :type="{'is-danger': errors.has('city')}"
+                            :message="[{'Une ville doit être renseignée': errors.first('city')}]">
+                            <p class="control has-icons-left">
+                                <input 
+                                    v-model="post.city" 
+                                    class="input" 
+                                    name="city"
+                                    v-validate="'required'"
+                                    type="text">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-map-pin"></i>
+                                </span>
+                            </p>
+                        </b-field>
 
-                            <b-field label="Code postal">
-                                <p class="control has-icons-left">
-                                    <input v-model="post.postalcode" class="input" type="text">
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-map-pin"></i>
-                                    </span>
-                                </p>
-                            </b-field>
+                        <b-field 
+                            label="Code postal"
+                            :type="{'is-danger': errors.has('postalcode')}"
+                            :message="[{'Un code postal doit être renseigné': errors.first('postalcode')}]">
+                            <p class="control has-icons-left">
+                                <input 
+                                    v-model="post.postalcode" 
+                                    class="input" 
+                                    name="postalcode"
+                                    v-validate="'required'"
+                                    type="text">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-map-pin"></i>
+                                </span>
+                            </p>
+                        </b-field>
 
-                            <b-field label="Pays">
-                                <p class="control has-icons-left">
-                                    <input v-model="post.country" class="input" value="France" type="text" disabled>
-                                    <span class="icon is-small is-left">
-                                        <i class="fas fa-map-pin"></i>
-                                    </span>
-                                </p>
-                            </b-field>
+                        <b-field label="Pays">
+                            <p class="control has-icons-left">
+                                <input v-model="post.country" class="input" value="France" type="text" disabled>
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-map-pin"></i>
+                                </span>
+                            </p>
+                        </b-field>
                     </div>
                  </div>
                  <div>
@@ -197,7 +259,7 @@
                 </section>
             </div>
         </div>
-        <div v-for="err in errors">
+        <div v-for="err in error">
            {{err}} 
         </div>
     </div>
@@ -229,7 +291,7 @@ export default {
                     category: '',
                     author: '',
                 },
-                errors: [],
+                error: [],
                 success: false,
             }
     },
@@ -240,36 +302,40 @@ export default {
     },
     methods: {
             savePost(){
-                const formData = new FormData();
+                this.$validator.validateAll().then((result) => {
+                    if (result) {
+                        const formData = new FormData();
 
-                formData.append('title', this.post.title);
-                formData.append('an_type', this.post.an_type);
-                formData.append('price', this.post.price);
-                formData.append('content', this.post.content);
-                formData.append('num_street', this.post.num_street);
-                formData.append('street', this.post.street);
-                formData.append('city', this.post.city);
-                formData.append('postalcode', this.post.postalcode);
-                if (this.post.image_one){
-                    formData.append('image_one', this.post.image_one);
-                }
-                if (this.post.image_two){
-                    formData.append('image_two', this.post.image_two);
-                }
-                if (this.post.image_three){
-                    formData.append('image_three', this.post.image_three);
-                }
-                formData.append('country', this.post.country);
-                formData.append('category', this.post.category);
-                formData.append('author', this.user.id);
-                
-                console.log(formData)
-                axios.post(`/api/manage/post/`, formData)
-                .then(response => {
-                    this.success = !this.success
-                })
-                .catch(e => {
-                    this.errors.push(e)
+                        formData.append('title', this.post.title);
+                        formData.append('an_type', this.post.an_type);
+                        formData.append('price', this.post.price);
+                        formData.append('content', this.post.content);
+                        formData.append('num_street', this.post.num_street);
+                        formData.append('street', this.post.street);
+                        formData.append('city', this.post.city);
+                        formData.append('postalcode', this.post.postalcode);
+                        if (this.post.image_one){
+                            formData.append('image_one', this.post.image_one);
+                        }
+                        if (this.post.image_two){
+                            formData.append('image_two', this.post.image_two);
+                        }
+                        if (this.post.image_three){
+                            formData.append('image_three', this.post.image_three);
+                        }
+                        formData.append('country', this.post.country);
+                        formData.append('category', this.post.category);
+                        formData.append('author', this.user.id);
+                        
+                        console.log(formData)
+                        axios.post(`/api/manage/post/`, formData)
+                        .then(response => {
+                            this.success = !this.success
+                        })
+                        .catch(e => {
+                            this.errors.push(e)
+                        })
+                    }
                 })
             },
             reset(){

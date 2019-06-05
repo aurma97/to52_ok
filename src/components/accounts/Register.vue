@@ -120,7 +120,7 @@ export default {
             this.$validator.validateAll().then((result) => {
                 if (result) {
                     this.$toast.open({
-                        message: 'Form is valid!',
+                        message: 'Le formulaire est valide!',
                         type: 'is-success',
                         position: 'is-bottom'
                     })
