@@ -25,13 +25,16 @@
                         <router-link class="navbar-item" to="/nouvelle-annonce" exact v-if="connected">
                             <i class="fas fa-plus-square"></i>&nbsp;&nbsp;Déposer une annonce
                         </router-link>
-                        <router-link class="navbar-item" to="/mes-favoris" exact v-if="connected">
+                        <!-- <router-link class="navbar-item" to="/mes-favoris" exact v-if="connected">
                             <i class="fas fa-heart"></i>&nbsp;&nbsp;Mes favoris
                         </router-link>
                         <router-link class="navbar-item" to="/mes-messages" exact v-if="connected">
                             <i class="fas fa-inbox"></i>&nbsp;&nbsp;Messages
-                        </router-link>
-
+                        </router-link> -->
+                        <router-link class="navbar-item" to="/mes-annonces" exact>
+                            <i class="fas fa-info"></i>&nbsp;&nbsp;Mes annonces
+                        </router-link>            
+                        
                         <router-link class="navbar-item" to="/connexion" exact v-if="!connected">
                             <i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Connexion
                         </router-link>
@@ -45,9 +48,6 @@
                             <div class="navbar-dropdown">
                                 <router-link class="navbar-item" to="/mon-compte" exact>
                                     <i class="fas fa-user-circle"></i>&nbsp;&nbsp;Mon compte
-                                </router-link>
-                                <router-link class="navbar-item" to="/mes-annonces" exact>
-                                    <i class="fas fa-info"></i>&nbsp;&nbsp;Mes annonces
                                 </router-link>
                                 <router-link class="navbar-item" to="/aide" exact>
                                     <i class="fas fa-question"></i>&nbsp;&nbsp;Aide

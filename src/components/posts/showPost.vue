@@ -211,7 +211,18 @@ export default {
                         From: this.mail.sender,
                         Subject: this.mail.object,
                         Body: this.mail.content
-                    }).then(message => console.log(message))
+                    }).then(message => {
+                        //Envoi de l'accusé de réception
+                        Email.send({
+                            Host: "smtp.gmail.com",
+                            Username: "lo54.p2019@gmail.com",
+                            Password: 990099009900,
+                            To: this.mail.sender,
+                            From: this.mail.sender,
+                            Subject: this.mail.object,
+                            Body: this.mail.content + ' \nEmail envoyé à : '+ this.mail.receiver
+                        })
+                    })
                 }
             })
         }
