@@ -37,13 +37,28 @@
                                 <span 
                                     class="multiselect__single" 
                                     v-if="values.length &amp;&amp; !isOpen">
-                                    {{ values.length }} selectionné
+                                    {{ values.length }} selectionné(s)
                                 </span>
                             </template>
                         </multiselect>
                     </b-field>
+
+                    <b-field v-if="value">
+                        <pre><code v-for="val in value">[x] {{ val.title }}<br></code></pre>
+                    </b-field>
+
+                    <b-field label="Recherche par prix" type="is-fullwidth">
+                        <div class="columns">
+                            <div class="column">
+                                <b-input placeholder="Min" v-model="priceMin" ></b-input>                               
+                            </div>
+                            <div class="column">
+                                <b-input placeholder="Max" v-model="priceMax" ></b-input>  
+                            </div>
+                        </div>                             
+                    </b-field>
                     <!-- <pre>
-                        {{filterPostsByCat}}
+                        {{filterPostsByPrice}}
                     </pre> -->
                 </div>
                 <div class="column">
@@ -214,6 +229,8 @@ export default {
             options: [
             ],
             value: [],
+            priceMin:'',
+            priceMax:''
         }
     },
     methods:{
@@ -230,15 +247,11 @@ export default {
                 }
             })
         },
-        filterPostsByCat(){
-            return this.posts.filter((post)=>{
-                if(post.category.title){
-                    this.options.forEach(element => {
-                       return post.category.title.match(element.title) 
-                    });
-                }
-            })
-        } 
+        // filterPostsByPrice(){
+        //     return this.posts.find(elt => {
+        //         (elt.price == this.priceMin) || (elt.price == this.priceMax)
+        //     })
+        // } 
     },
     created(){
         axios.get('/api/manage/post/all').then(response =>{
