@@ -1,38 +1,9 @@
 <template>
-    <header>
-        <p>{{copyright}} {{title}}</p>
-    </header>
+    <div class="hero is-ligth container is-bottom has-shadow">
+        <hr>
+            <div class="hero hero-body">
+                Copyrigth - June 2019
+            </div>
+        </div>
+    </div>
 </template>
-
-<script>
-import { bus} from '../../main';
-export default {
-    props:{
-        title:{
-            type: String
-        }
-    },
-    data(){
-        return {
-            copyright: 'Copyright 2019'
-        }
-    },
-    created(){
-        bus.$on('titleChanged',(data) => {
-            this.title = data
-        });
-    }
-}
-</script>
-
-<style scoped>
-footer{
-    background: #222;
-    padding: 6px;
-}
-
-p{
-    color: #222;
-    text-align:center;
-}
-</style>

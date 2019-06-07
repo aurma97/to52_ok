@@ -15,10 +15,9 @@
           </p>
           <p>
             <div class="notification is-link has-text-centered">
-                <b-button type="is-info"
-                    inverted>
+                <router-link class="button is-info is-inverted" to="/">
                     Accueil
-                </b-button>
+                </router-link>
                 &ensp;
                 <b-button @click="reset" type="is-info"
                     inverted

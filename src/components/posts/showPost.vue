@@ -1,11 +1,10 @@
 <template>
-    <section class="hero is-link is-bold is-dark is-medium">
+    <section class="hero is-ligth is-bold is-medium">
     <div class="hero-head">
         <div class="container">
             <br>
             <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
                 <ul>
-                   
                     <li><a href="#"><strong>Accueil</strong></a></li>
                     <li><a href="#"><strong>Annonces</strong></a></li>
                     <li class="is-active"><a href="#" aria-current="page">{{post.title}}</a></li>
@@ -14,14 +13,16 @@
         </div>
     </div>
 
-    <div class="hero-body">
+    <div>
+        <br>
         <div class="container has-text-centered">
-            <hr>
+            <br>
             <p class="title">
                 {{post.title}}
                 <hr>
             </p>
         </div>
+        <br>
         <nav class="level">
             <div class="level-item has-text-centered">
                 <div>
@@ -51,37 +52,38 @@
                 <p class="title">Offre</p>
                 </div>
             </div>
+            <div class="level-item has-text-centered">
+                <div>
+                <p class="heading">Prix</p>
+                <hr>
+                <p class="title">{{post.price}} €</p>
+                </div>
+            </div>
         </nav>
     </div>
-
+    <br>
     <div class="hero-foot">
+        <br>
         <nav class="tabs is-boxed is-fullwidth">
             <div class="container">
                 <template>
                     <b-tabs>
                         <b-tab-item label="Description" icon="playlist-check">
-                            <div class="notification">
-                                <span class="has-text-primary">
+                            <div>
+                                <span class="has-text-link">
                                     {{post.content}}
                                 </span>
                             </div>
                         </b-tab-item>
-                        <b-tab-item label="Tarif" icon="cash">
-                            <div class="notification">
-                                <span class="has-text-primary">
-                                    Cout : {{post.price}} €
-                                </span>
-                            </div>
-                        </b-tab-item>
                         <b-tab-item label="Photos" icon="image">
-                            <div class="">
-                                    <img class="image" v-for="(image, i) in post.images" :src="image" :key="i" @click="index = i">
+                            <div>
+                                    <img class="image" v-for="(image, i) in post.images" :src="image" :key="i" @click="index = i" v-if="image">
                                     <vue-gallery-slideshow :images="post.images" :index="index" @close="index = null"></vue-gallery-slideshow>
                             </div>
                         </b-tab-item>
                         <b-tab-item label="Localisation" icon="map-marker">
-                            <div class="notification">
-                                <span class="has-text-primary">
+                            <div>
+                                <span class="has-text-link">
                                     <strong>Adresse : </strong> {{post.address.num_street}} {{post.address.street}}, {{post.address.postalcode}}, {{post.address.city}}, {{post.address.country}}
                                     <br>
                                 </span>
@@ -94,7 +96,7 @@
                             </div>
                         </b-tab-item>
                         <b-tab-item label="Contacter le vendeur" icon="message-text">
-                            <div class="notification is-white">
+                            <div>
                                 <section>
                                     <b-field 
                                         label="Emetteur">

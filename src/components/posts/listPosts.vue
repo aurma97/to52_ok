@@ -1,82 +1,167 @@
 <template>
-    <div>
-        <hr>
-        
-        <search></search>
-        <div class="container">
+    <section>
+        <section>
+            <br>
+            <br>
             <div class="columns">
-                <div class="column">
-                    <div class="columns">
-                        <div class="column is-2">
-                            <strong>{{posts.length}} Annonces</strong>
-                        </div>
-                        <div class="column">
-                            <!-- <section>
-                                <div class="block">
-                                    <b-checkbox type="is-info"
-                                        native-value="Flint">
-                                        Etudiants <strong><span class="has-text-link">100 000</span></strong>
-                                    </b-checkbox>
-                                </div>
-                            </section> -->
-                        </div>
-                        <div class="column">
-                            <!-- <section>
-                                <div class="block">
-                                    <b-checkbox type="is-info"
-                                        native-value="Flint">
-                                        Personnel <strong><span class="has-text-link">100 000</span></strong>
-                                    </b-checkbox>
-                                </div>
-                            </section> -->
-                        </div>
-                        <div class="column">
-                            <section>
-                                <b-field type="is-fullwidth"> 
-                                    <b-select placeholder="Trier">
-                                        <option>Tri : Prix croissants</option>
-                                        <option>Tri : Prix décroissants</option>
-                                        <option>Tri : Plus anciennes</option>
-                                        <option>Tri : Plus récentes</option>
-                                    </b-select>
-                                </b-field>
-                            </section>
-                        </div>
-                    </div>
-                    <div class="notification" v-for="post in posts">
-                        <article class="media">
-                            <figure class="media-left">
-                                <p class="image is-128x128">
-                                    <img v-bind:src="url+post.image_one">
-                                </p>
-                            </figure>
-                            <div class="media-content">
-                                <div class="content">
-                                    <p>
-                                        <router-link v-bind:to="'/annonce/'+ post.id"><h3>{{post.title}}</h3></router-link>
-                                        <br>
-                                        {{post.content}}
-                                        <p>
-                                             {{post.Category_title}}<br>
-                                            {{post.city}} {{post.postalcode}} <br>
-                                            {{post.created_at}}
-                                        </p>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="media-right">
-                                <span class="fas fa-heart"></span>
-                            </div>
-                        </article>
-                        
-                    </div>
+                <div class="column is-1"></div>
+                <div class="column is-2">
+                    <h1 class="title is-4">Critères de recherche</h1>
+                    <b-field label="Recherche par titre" type="is-fullwidth">
+                        <b-input placeholder="Une montre connectée ?" v-model="search" ></b-input>                               
+                    </b-field>
+                    
+                    <b-field label="Annonces par page" type="is-fullwidth">
+                        <b-select v-model="perPage">
+                            <option value="5">5 par page</option>
+                            <option value="10">10 par page</option>
+                            <option value="15">15 par page</option>
+                            <option value="20">20 par page</option>
+                        </b-select>
+                    </b-field>
+                    <b-field label="Filtre par catégorie" type="is-fullwidth">
+                        <multiselect 
+                            v-model="value" 
+                            :options="options" 
+                            :multiple="true" 
+                            :close-on-select="false" 
+                            :clear-on-select="false" 
+                            :preserve-search="true" 
+                            placeholder="Ajouter une catégorie" 
+                            label="title" 
+                            track-by="title" 
+                            :preselect-first="true">
+                            <template 
+                                slot="selection" 
+                                slot-scope="{ values, search, isOpen }">
+                                <span 
+                                    class="multiselect__single" 
+                                    v-if="values.length &amp;&amp; !isOpen">
+                                    {{ values.length }} selectionné
+                                </span>
+                            </template>
+                        </multiselect>
+                    </b-field>
+                    <!-- <pre>
+                        {{filterPostsByCat}}
+                    </pre> -->
                 </div>
-                <div class="column is-3">
+                <div class="column">
+                    <h1 class="title is-4">Liste des annonces</h1>
+                    <b-table
+                        type="container"
+                        :data="isEmpty ? [] : filterPosts"
+                        :paginated="isPaginated"
+                        :per-page="perPage"
+                        :opened-detailed="defaultOpenedDetails"
+                        ref="table"
+                        detailed
+                        detail-key="id"
+                        @details-open="(row, index) => $toast.open(`Expanded ${row.title}`)"
+                        :show-detail-icon="showDetailIcon"
+                        :current-page.sync="currentPage"
+                        default-sort="name"
+                        aria-next-label="Page suivante"
+                        aria-previous-label="Page précedente"
+                        aria-page-label="Page"
+                        aria-current-label="Page actuelle">
+
+                        <template slot-scope="props">
+                            <b-table-column field="name" label="Titre" sortable>
+                                <template v-if="showDetailIcon">
+                                    <strong class="has-text-link">{{ props.row.title }}</strong>
+                                </template>
+                                <template v-else>
+                                    <a @click="toggle(props.row)">
+                                        <strong class="notification is-link">{{ props.row.title }}</strong>
+                                    </a>
+                                </template>
+                            </b-table-column>
+
+                            <b-table-column field="price" label="Prix" sortable>
+                                <span class="tag is-success">
+                                    {{ props.row.price }} €
+                                </span>
+                            </b-table-column>
+
+                            <b-table-column field="an_type.title" label="Type" sortable>
+                                {{ props.row.an_type.title }}
+                            </b-table-column>
+
+                            <b-table-column field="category.title" label="Categorie" sortable>
+                                {{ props.row.category.title }}
+                            </b-table-column>
+
+                            <b-table-column field="date_purchase" label="Date publication" sortable centered>
+                                <span class="tag is-success">
+                                    {{ new Date(props.row.created_at).toLocaleDateString() }}
+                                </span>
+                            </b-table-column>
+
+                            <b-table-column sortable centered>
+                                <b-field grouped group-multiline>
+                                    <div class="control is-flex">
+                                        <router-link :to="'/annonce/'+ props.row.id"><i :title="'Consulter \''+props.row.title+'\''" class="fas fa-search"></i></router-link>
+                                    </div>
+                                </b-field>
+                            </b-table-column>
+                        </template>
+
+                        <template slot="detail" slot-scope="props">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <span class="title is-5">{{ props.row.title }}</span>
+                                            <br>
+                                            <strong>Description: </strong>{{props.row.content}}
+                                            <br>
+                                            <strong>Adresse: </strong>{{props.row.num_street}} {{props.row.street}} {{props.row.city}} {{props.row.postalcode}} {{props.row.country}}
+                                        </p>
+                                        <p v-if="props.row.image_one">
+                                            <strong>Illustrations:</strong>
+                                            <br>
+                                            <div class="columns">
+                                                <div class="column" v-if="props.row.image_one">
+                                                    <img :src="props.row.image_one" width="300" height="200">
+                                                </div>
+                                                <div class="column" v-if="props.row.image_two">
+                                                    <img :src="props.row.image_two" width="300" height="200">
+                                                </div>
+                                                <div class="column" v-if="props.row.image_three">
+                                                    <img :src="props.row.image_three" width="300" height="200">
+                                                </div>
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </template>
+
+                        <!-- isEmpty -->
+                        <template slot="empty">
+                            <section class="section">
+                                <div class="content has-text-grey has-text-centered">
+                                    <p>
+                                        <b-icon
+                                            icon="emoticon-sad"
+                                            size="is-large">
+                                        </b-icon>
+                                    </p>
+                                    <p>Rien par ici.</p>
+                                </div>
+                            </section>
+                        </template>
+                    </b-table>
+                  
+                </div>
+                <div class="column is-2">
+                    <h1 class="title is-4">A la une</h1>
                     <div v-for="special in specials">
                         <div class="card">
                             <div class="card-image">
                                 <figure class="image is-4by3">
-                                    <img :src="url+special.image_one" alt="Placeholder image">
+                                    <img :src="special.image_one" alt="Placeholder image">
                                 </figure>
                             </div>
                             <div class="card-content">
@@ -100,39 +185,73 @@
                         </div>
                         <br>
                     </div>
-                    
                 </div>
+                <div class="column is-1"></div>
             </div>
-            <hr>
-        </div>
-    
-    
-    </div>
+        </section>
+    </section>
 </template>
 
 <script>
-import Search from '../../components/search/Search.vue'
 import axios from 'axios'
+import Multiselect from 'vue-multiselect'
 export default {
+    components:{
+        Multiselect
+    },
     data(){
         return{
-            posts: {},
-            specials: {},
-            url: ''
+            posts: [],
+            specials: [],
+            isPaginated: true,
+            isPaginationSimple: false,
+            currentPage: 1,
+            perPage: 5,
+            defaultOpenedDetails: [1],
+            showDetailIcon: true,
+            search:'',
+            isEmpty: false,
+            options: [
+            ],
+            value: [],
         }
     },
     methods:{
-
+        //Pour la liste déroulante de description
+        toggle(row) {
+            this.$refs.table.toggleDetails(row)
+        }
+    },
+    computed: {
+        filterPosts(){
+            return this.posts.filter((post)=>{
+                if(post.title){
+                    return post.title.match(this.search)
+                }
+            })
+        },
+        filterPostsByCat(){
+            return this.posts.filter((post)=>{
+                if(post.category.title){
+                    this.options.forEach(element => {
+                       return post.category.title.match(element.title) 
+                    });
+                }
+            })
+        } 
     },
     created(){
         axios.get('/api/manage/post/all').then(response =>{
             this.posts = response.data;
-            this.specials = response.data.slice(0, 2);
+            this.specials = response.data.slice(0,1)
         });
+        axios.get('/api/manage/category').then(response =>{
+            console.log(response.data)
+            this.options = response.data
+        })
+
+        this.$store.dispatch('authentication/getUser');
     },
-    components:{
-        'search': Search,
-    }
 }
 </script>
 

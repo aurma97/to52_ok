@@ -7,6 +7,7 @@ from . import views
 
 urlpatterns = [
     path('', csrf_exempt(PostAPIView.as_view())),
+    path('paginated', csrf_exempt(PostPaginatedView.as_view())),
     path('all', PostDetailAPIView.as_view()),
     path('type', PostTypeAPIView.as_view(), name="post-create"),
     path('date/<pk>', PostRudView.as_view(), name="post-rud"),

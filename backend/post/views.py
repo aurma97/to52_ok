@@ -7,7 +7,15 @@ from django.http import HttpResponse
 from django.db import connection
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from .pagination import PostLimitOffSetPagination, PostPageNumberPagination
 import json
+
+
+class PostPaginatedView(mixins.CreateModelMixin, generics.ListAPIView):
+    lookup_field = 'pk'
+    serializer_class= PostDetailSerializer
+    queryset = Post.objects.all()
+    pagination_class = PostPageNumberPagination
 
 #See all objects and create someone
 class PostAPIView(mixins.CreateModelMixin, generics.ListAPIView):
@@ -88,6 +96,8 @@ def get_posts_user(request, id):
 
     return HttpResponse(author)
 
+
+## To see which post belongs to which author
 class PostByAuthorAPIView(generics.ListAPIView):
     lookup_field = 'author'
     serializer_class = PostDetailSerializer
