@@ -14,6 +14,7 @@
 </template>
 
 <script>
+/* eslint-disable */ 
 import Header from './components/test/Header.vue'
 import Footer from './components/test/Footer.vue'
 

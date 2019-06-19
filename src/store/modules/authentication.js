@@ -3,13 +3,15 @@ import axios from 'axios'
 const state = {
     status: '',
     token: localStorage.getItem('token') || '',
-    user : localStorage.getItem('user') || ''
+    user : localStorage.getItem('user') || '',
+    users : localStorage.getItem('users') || ''
 }
 
 const getters = {
     isLoggedIn: state => !!state.token,
     authStatus: state => state.status,
-    user: state => state.user
+    user: state => state.user,
+    users: state => state.users
 }
 
 const actions = {
@@ -57,12 +59,19 @@ const actions = {
         commit('register_success')
     },
     getUser({commit}){
-          axios.get('/api/manage/account/user/').then(response =>{
-                //console.log(response)
-                localStorage.setItem('user', response.data)
-                commit('set_user', response.data)
-          });
-    }
+        axios.get('/api/manage/account/user/').then(response =>{
+              //console.log(response)
+              localStorage.setItem('user', response.data)
+              commit('set_user', response.data)
+        });
+    },
+    getUsers({commit}){
+      axios.get('/api/manage/account/all').then(response =>{
+            //console.log(response)
+            localStorage.setItem('users', response.data)
+            commit('set_users', response.data)
+      });
+  }
 }
 
 const mutations = {
@@ -82,6 +91,9 @@ const mutations = {
     },
     set_user(state, user){
         state.user = user
+    },
+    set_users(state, users){
+        state.users = users
     },
     register_success(state, username){
         state.username = username

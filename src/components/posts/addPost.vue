@@ -25,13 +25,11 @@
                     Déposer une autre annonce
                 </b-button>
                 &ensp;
-                <b-button type="is-info"
-                    inverted
-                    outlined>
+                <router-link class="button is-info" to="/mes-annonces">
                     Mes annonces
-                </b-button>
+                </router-link>
             </div>
-            </p>
+           </p>
             <hr>
         </div>
         
@@ -40,7 +38,7 @@
                 <section>
                     <b-field type="is-fullwidth" label="Catégorie *">
                         <b-select placeholder="Selectionner une catégorie" v-model="post.category">
-                            <option :value="cat.pk" v-for="cat in categories">
+                            <option v-for="cat in categories" :value="cat.id" >
                                 {{cat.title}}
                             </option>
                         </b-select>
@@ -51,7 +49,7 @@
                     <b-field type="is-fullwidth" label="Type d'annonce *">
                         <div class="control">
                             <label class="radio" v-for="typ in postType">
-                                <input type="radio" name="foobar" v-model="post.an_type" v-bind:value="typ.id" >
+                                <input type="radio" name="foobar" v-model="post.an_type" :value="typ.id" >
                                 {{typ.title}}
                             </label>
                         </div>
@@ -93,6 +91,10 @@
                         </p>
                     </b-field>
                  </section>
+                 <section>
+                    <br>
+                    <b-button type="is-link is-fullwidth" @click="savePost" >Ajouter</b-button>
+                </section>
             </div>
             <div class="column">
                  <section>
@@ -245,18 +247,6 @@
                     </section>
                  </div>
             </div>
-            <div class="column is-2">
-                <section>
-                    <figure class="image is-128x128">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqNUNP1_6Jrwu4eiQES_gzdxYZoOQ5CJdNp_5EgmPJChwBk6A4Xw">
-                    </figure>
-                </section>
-                
-                <section>
-                    <br>
-                    <b-button type="is-link is-fullwidth" @click="savePost" >Ajouter</b-button>
-                </section>
-            </div>
         </div>
         <div v-for="err in error">
            {{err}} 
@@ -268,11 +258,10 @@
 import axios from 'axios'
 axios.defaults.xsrfCookieName = 'csrftoken'
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN"
-let formData = new FormData();
 export default {
      data() {
             return {
-                categories: [],
+                categories: {},
                 postType: [],
                 post : {
                     title: '',
@@ -305,6 +294,9 @@ export default {
                     if (result) {
                         const formData = new FormData();
 
+                        //console.log(this.categories)
+                        //console.log(this.post.category)
+
                         formData.append('title', this.post.title);
                         formData.append('an_type', this.post.an_type);
                         formData.append('price', this.post.price);
@@ -326,9 +318,9 @@ export default {
                         formData.append('category', this.post.category);
                         formData.append('author', this.user.id);
                         
-                        console.log(formData)
+                        //console.log(formData)
                         axios.post(`/api/manage/post/`, formData)
-                        .then(response => {
+                        .then(() => {
                             this.success = !this.success
                         })
                         .catch(e => {
@@ -361,6 +353,8 @@ export default {
             axios.get('/api/manage/post/type').then(response =>{
                 this.postType = response.data;
             });
+
+            this.$store.dispatch('authentication/getUser');
         }
 }
 </script>

@@ -3,7 +3,7 @@
         <section>
             <br>
              <b-message title="Bienvenue sur votre site de gestionne d'annonces" type="container is-info" aria-close-label="Close message">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce id fermentum quam. Proin sagittis, nibh id hendrerit imperdiet, elit sapien laoreet elit
+                Nous espérons que vous trouverez votre compte
             </b-message>
             <br>
             <div class="columns">

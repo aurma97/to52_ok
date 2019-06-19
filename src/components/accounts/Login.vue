@@ -1,5 +1,5 @@
 <template>
-    <section class="hero is-large is-link is-bold">
+    <section class="hero is-large is-ligth is-bold">
         <div class="hero-body">
             <div class="container">
                 <span class="notification is-success" v-if="newuser">Bonjour {{newuser}} ! Votre inscription s'est effectuée avec succès, veuillez vous connecter dès à présent !</span>
@@ -9,7 +9,7 @@
                 <p class="subtitle">
                     Veuillez remplir le formulaire ci-dessous pour vous connecter
                 </p>
-                <p class="help is-warning" v-if="error">
+                <p class="help is-danger" v-if="error">
                     Connexion impossible, Veuillez vérifier votre login ou mot de passe
                 </p>
             </div>

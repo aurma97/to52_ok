@@ -5,8 +5,8 @@
             <br>
             <nav class="breadcrumb has-arrow-separator" aria-label="breadcrumbs">
                 <ul>
-                    <li><a href="#"><strong>Accueil</strong></a></li>
-                    <li><a href="#"><strong>Annonces</strong></a></li>
+                    <li><a href="/"><strong>Accueil</strong></a></li>
+                    <li><a href="/"><strong>Annonces</strong></a></li>
                     <li class="is-active"><a href="#" aria-current="page">{{post.title}}</a></li>
                 </ul>
             </nav>
@@ -62,19 +62,19 @@
         </nav>
     </div>
     <br>
+    <div class="container">
+        <hr>
+        <h3 class="subtitle is-2 has-text-centered">Description de l'annonce</h3>
+        <hr>
+        {{post.content}}
+        <hr>
+    </div>
     <div class="hero-foot">
         <br>
         <nav class="tabs is-boxed is-fullwidth">
             <div class="container">
                 <template>
                     <b-tabs>
-                        <b-tab-item label="Description" icon="playlist-check">
-                            <div>
-                                <span class="has-text-link">
-                                    {{post.content}}
-                                </span>
-                            </div>
-                        </b-tab-item>
                         <b-tab-item label="Photos" icon="image">
                             <div>
                                     <img class="image" v-for="(image, i) in post.images" :src="image" :key="i" @click="index = i" v-if="image">
@@ -97,7 +97,17 @@
                         </b-tab-item>
                         <b-tab-item label="Contacter le vendeur" icon="message-text">
                             <div>
-                                <section>
+                                <div class="columns">
+                                    <div class="column">
+
+                                    </div>
+                                    <div class="column">
+                                        <span v-if="!user" class="notification is-info is-centered">Veuillez vous connecter pour contacter le vendeur</span>
+                                        <span v-if="ok" class="notification is-success is-centered">Votre message a bien été envoyé</span>
+                                    </div>
+                                    <div class="column"></div>
+                                </div>
+                                <section v-if="user && !ok">
                                     <b-field 
                                         label="Emetteur">
                                         <b-input 
@@ -140,7 +150,7 @@
                                             required>
                                         </b-input>
                                     </b-field>
-                                    <b-button type="is-link" @click.prevent="send" outlined>Envoyer</b-button>
+                                    <b-button v-if="user" type="is-link" @click.prevent="send" outlined>Envoyer</b-button>
                                 </section>
                             </div>
                         </b-tab-item>
@@ -163,6 +173,7 @@ export default {
     data(){
         return {
             id: this.$route.params.id,
+            ok: false,
             post: {
                 title: '',
                 an_type: '',
@@ -195,7 +206,7 @@ export default {
         }
     },
     computed:{
-         user(){
+        user(){
           return this.$store.getters['authentication/user']
         },
     },
@@ -215,6 +226,7 @@ export default {
                         Body: this.mail.content
                     }).then(message => {
                         //Envoi de l'accusé de réception
+                        this.ok = true;
                         Email.send({
                             Host: "smtp.gmail.com",
                             Username: "lo54.p2019@gmail.com",

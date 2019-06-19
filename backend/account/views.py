@@ -2,20 +2,19 @@ from django.http import HttpResponse
 from rest_framework import generics, mixins
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .permissions import AllowAny 
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from django.contrib.auth import login, logout, authenticate
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
-from .serializer import UserSerializer
+from .serializer import UserSerializer, UserDetailSerializer
 import json
 
 @api_view(['GET'])
 def current_user(request):
-    # current_user = request.user
-    # user = [current_user.username, current_user.id]
-    # return HttpResponse(user)
-    serializer = UserSerializer(request.user)
+    serializer = UserDetailSerializer(request.user)
     return Response(serializer.data)
 
+@csrf_exempt
 def login_user (request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -30,19 +29,31 @@ def login_user (request):
             return HttpResponse("error")
         return HttpResponse(username)
         
+@csrf_exempt
 def logout_user(request):
     if request.method == 'POST':
         logout(request)
     return HttpResponse('Logout successful')
 
+class CsrfExempt(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return 
+
 class AccountAPIView(generics.ListCreateAPIView):
     queryset = User.objects.all()
+    authentication_classes = (CsrfExempt, BasicAuthentication)
     serializer_class= UserSerializer
-   
 
-def register_user(request):
-    form = request.POST
+class AccountRudView(generics.RetrieveUpdateDestroyAPIView):
+    #lookup_field = 'pk'
+    serializer_class = UserSerializer
+    authentication_classes = (CsrfExempt, BasicAuthentication)
+    queryset = User.objects.all()
 
-    if form.is_valid():
-        form.save()
-    return HttpResponse('Logout successful')
+    # def get_object(self):
+    #     username = self.kwargs["username"]
+    #     obj = get_object_or_404(User, username = username)
+    #     return obj
+    
+    # def put (self, request, *args, **kwargs):
+    #     return self.update(request, *args, **kwargs)

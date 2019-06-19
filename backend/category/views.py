@@ -30,7 +30,6 @@ class CategoryAPIView(mixins.CreateModelMixin, generics.ListAPIView):
     #     return self.update(request, *args, **kwargs)
 
 
-
 class CategoryRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'pk'
     serializer_class= CategorySerializer
